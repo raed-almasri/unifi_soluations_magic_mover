@@ -1,0 +1,1265 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Magic Transporters Api Doc",
+        "description": "by: Eng.Raed Al Masri",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:4001",
+            "description": "Local development server"
+        },
+        {
+            "url": "https://api.example.net",
+            "description": "Production server"
+        }
+    ],
+    "paths": {
+        "_comment1": "Authentication Api",
+        "/auth": {
+            "post": {
+                "tags": ["Authentication"],
+                "description": "login to the system ",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "admin@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Test@1234"
+                                    }
+                                },
+                                "required": ["email", "password"]
+                            },
+                            "example": {
+                                "email": "admin@gmail.com",
+                                "password": "Test@1234"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The operation was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "The operation was successful"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "token": {
+                                                            "type": "string",
+                                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                        },
+                                                        "refreshToken": {
+                                                            "type": "string",
+                                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                        },
+                                                        "role": {
+                                                            "type": "string",
+                                                            "example": "mover"
+                                                        },
+                                                        "verification_email": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        }
+                                                    }
+                                                },
+                                                "error": {
+                                                    "type": ["object", "null"],
+                                                    "example": null
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The operation was failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "incorrect email"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "schema": {
+                    "$ref": "#/components/schemas/login"
+                }
+            },
+            "get": {
+                "tags": ["Authentication"],
+                "description": "logout from system",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "put": {
+                "tags": ["Authentication"],
+                "description": "refresh token to the system ",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string",
+                                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWQiOiJiYWQzNDJkMDk0ZDNlNTk5OWU2MmE5Mjk4ZDc3ZTM1MDlmZmNkNzhjZDkxNjE5ZjQ5ODE1ZGFlMTY1ZGIzY2NjNjgxY2UyYjI4MDRjMTcxM2RiZGVjMjRiOTExNTdmYWY3NmJiMzhlNzEzZTY2MzMwN2ViZTAwZWI0MTdhNTkwZjdiZGJjNGI3NzUyZDFlYTkzMTJhZWYxNjRmYjIyNTkzM2E1YmFiMDRhNjczYWM0MmE4ZDFkM2JjNzdmYmZiZDYyYzdmYmYyYjVmMDIwYmMyZjBmZjdiMTA4OTMzNGNmOCIsImlhdCI6MTcxMzcxNTE1NSwiZXhwIjoxNzEzODAxNTU1fQ.hDdNGsdeirXfJZqJF5tJPrWUJm8lVYUF0sLojIdUfM8"
+                                    }
+                                },
+                                "required": ["refreshToken"]
+                            },
+                            "example": {
+                                "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbmNyeXB0ZWQiOiJhMGQ2ZDRkYTA5MmI0ZjhkZTE0MDM1Mjc4MDU5YzcwNSIsImlhdCI6MTcxMTQ1MzMxMiwiZXhwIjoxNzQyNTU3MzEyfQ.lWwVlBSbkaK2x2p0cZarLO4tm5ca-qrjV-skMaoRN18"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The operation was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "The operation was successful"
+                                                },
+                                                "data": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "token": {
+                                                            "type": "string",
+                                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                        },
+                                                        "refreshToken": {
+                                                            "type": "string",
+                                                            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                        },
+                                                        "role": {
+                                                            "type": "string",
+                                                            "example": "mover"
+                                                        },
+                                                        "verification_email": {
+                                                            "type": "boolean",
+                                                            "example": true
+                                                        }
+                                                    }
+                                                },
+                                                "error": {
+                                                    "type": ["object", "null"],
+                                                    "example": null
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+
+        "_comment3": "Admin",
+        "_comment4": "Admin / Users",
+        "/admin/users/": {
+            "post": {
+                "tags": ["Admin / Users"],
+                "description": "add new user to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "email": { "type": "string" },
+                                    "password": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "name": "Raed Al Masri",
+                                "email": "raed.al.masri.it@gmail.com",
+                                "password": "Test@1234"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Admin / Users"],
+                "description": "fetch all Users in DB",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The operation was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "The operation was successful"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "_id": {
+                                                                "type": "string",
+                                                                "example": "6720cb8b2e26afb4b4a869fa"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Raed Al Masri"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "raed.al.masri.it@gmail.com"
+                                                            },
+                                                            "role": {
+                                                                "type": "string",
+                                                                "example": "mover"
+                                                            },
+                                                            "createdAt": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-10-29T11:48:27.606Z"
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "_id",
+                                                            "name",
+                                                            "email",
+                                                            "role",
+                                                            "createdAt"
+                                                        ]
+                                                    }
+                                                },
+                                                "error": {
+                                                    "type": ["string", "null"],
+                                                    "example": null
+                                                }
+                                            },
+                                            "required": [
+                                                "message",
+                                                "data",
+                                                "error"
+                                            ]
+                                        }
+                                    },
+                                    "required": ["success", "result"]
+                                },
+                                "example": {
+                                    "success": true,
+                                    "result": {
+                                        "message": "The operation was successful",
+                                        "data": [
+                                            {
+                                                "_id": "6720cb8b2e26afb4b4a869fa",
+                                                "name": "Raed Al Masri",
+                                                "email": "raed.al.masri.it@gmail.com",
+                                                "role": "mover",
+                                                "createdAt": "2024-10-29T11:48:27.606Z"
+                                            }
+                                        ],
+                                        "error": null
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/admin/users/{id}": {
+            "put": {
+                "tags": ["Admin / Users"],
+                "description": "update  user to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "email": { "type": "string" },
+                                    "password": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "name": "Raed Al Masri",
+                                "email": "raed.al.masri.it@gmail.com",
+                                "password": "Test@1234"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Admin / Users"],
+                "description": "delete  user to db",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Admin / Users"],
+                "description": "List who completed the most missions",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The operation was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "The operation was successful"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "_id": {
+                                                                "type": "string",
+                                                                "example": "6720cb8b2e26afb4b4a869fa"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Raed Al Masri"
+                                                            },
+                                                            "email": {
+                                                                "type": "string",
+                                                                "example": "raed.al.masri.it@gmail.com"
+                                                            },
+                                                            "verification_email": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "countComplatedMissions": {
+                                                                "type": "number",
+                                                                "example": 15
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "_id",
+                                                            "name",
+                                                            "email",
+                                                            "verification_email",
+                                                            "countComplatedMissions"
+                                                        ]
+                                                    }
+                                                },
+                                                "error": {
+                                                    "type": ["string", "null"],
+                                                    "example": null
+                                                }
+                                            },
+                                            "required": [
+                                                "message",
+                                                "data",
+                                                "error"
+                                            ]
+                                        }
+                                    },
+                                    "required": ["success", "result"]
+                                },
+                                "example": {
+                                    "success": true,
+                                    "result": {
+                                        "message": "The operation was successful",
+                                        "data": [
+                                            {
+                                                "_id": "6720cb8b2e26afb4b4a869fa",
+                                                "name": "Raed Al Masri",
+                                                "email": "raed.al.masri.it@gmail.com",
+                                                "verification_email": false,
+                                                "countComplatedMissions": 15
+                                            }
+                                        ],
+                                        "error": null
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+
+        "_comment5": "Admin",
+        "_comment6": "Admin / Magic Mover",
+        "/admin/magic-mover/": {
+            "post": {
+                "tags": ["Admin / Magic Mover"],
+                "description": "add new user to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "weight": { "type": "string" },
+                                    "energy": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "weight": 500,
+                                "energy": 900
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/admin/magic-mover": {
+            "put": {
+                "tags": ["Admin / Magic Mover"],
+                "description": "update Magic mover for special user to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "weight": { "type": "string" },
+                                    "energy": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "weight": 500,
+                                "energy": 900
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/MoverIdQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Admin / Magic Mover"],
+                "description": "delete magic mover to db",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserIdQuery"
+                    },
+                    {
+                        "$ref": "#/components/parameters/MoverIdQuery"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "_comment7": "Admin",
+        "_comment8": "Admin / Magic Item",
+        "/mover/magic-item": {
+            "post": {
+                "tags": ["Mover / Magic Item"],
+                "description": "add item to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "weight": { "type": "number" },
+                                    "trip_id": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "name": "product 1 2",
+                                "weight": 1,
+                                "trip_id": "671f8b2644c38b155cbb1d71"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/mover/magic-item/{id}": {
+            "delete": {
+                "tags": ["Mover / Magic Item"],
+                "description": "delete from db",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+
+        "_comment9": "Admin",
+        "_comment10": "Mover / Users",
+        "/mover/trip/": {
+            "post": {
+                "tags": ["Mover / Trip"],
+                "description": "add new  to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "mover_id": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "name": "first mover in 22024222 2",
+                                "mover_id": "671f84ee3a89d1f8ef5f0ea0"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Mover / Trip"],
+                "description": "fetch all Users in DB",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The operation was successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "The operation was successful"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "_id": {
+                                                                "type": "string",
+                                                                "example": "671f85143a89d1f8ef5f0eaa"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "first mover in 2025"
+                                                            },
+                                                            "quest_state": {
+                                                                "type": "string",
+                                                                "example": "done"
+                                                            },
+                                                            "createdAt": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-10-28T12:35:32.511Z"
+                                                            },
+                                                            "updatedAt": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-10-29T12:07:46.962Z"
+                                                            },
+                                                            "mover_info": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "_id": {
+                                                                        "type": "string",
+                                                                        "example": "671f84ee3a89d1f8ef5f0ea0"
+                                                                    },
+                                                                    "weight": {
+                                                                        "type": "number",
+                                                                        "example": 500
+                                                                    },
+                                                                    "energy": {
+                                                                        "type": "number",
+                                                                        "example": 900
+                                                                    },
+                                                                    "createdAt": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2024-10-28T12:34:55.013Z"
+                                                                    },
+                                                                    "updatedAt": {
+                                                                        "type": "string",
+                                                                        "format": "date-time",
+                                                                        "example": "2024-10-28T12:34:55.013Z"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "_id",
+                                                                    "weight",
+                                                                    "energy",
+                                                                    "createdAt",
+                                                                    "updatedAt"
+                                                                ]
+                                                            },
+                                                            "magic_items": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "_id": {
+                                                                            "type": "string",
+                                                                            "example": "671f964a97a9bc4f54c40846"
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string",
+                                                                            "example": "product 1"
+                                                                        },
+                                                                        "weight": {
+                                                                            "type": "number",
+                                                                            "example": 200
+                                                                        },
+                                                                        "createdAt": {
+                                                                            "type": "string",
+                                                                            "format": "date-time",
+                                                                            "example": "2024-10-28T13:48:58.970Z"
+                                                                        }
+                                                                    },
+                                                                    "required": [
+                                                                        "_id",
+                                                                        "name",
+                                                                        "weight",
+                                                                        "createdAt"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "_id",
+                                                            "name",
+                                                            "quest_state",
+                                                            "createdAt",
+                                                            "updatedAt",
+                                                            "mover_info",
+                                                            "magic_items"
+                                                        ]
+                                                    }
+                                                },
+                                                "error": {
+                                                    "type": ["string", "null"],
+                                                    "example": null
+                                                }
+                                            },
+                                            "required": [
+                                                "message",
+                                                "data",
+                                                "error"
+                                            ]
+                                        }
+                                    },
+                                    "required": ["success", "result"]
+                                }
+                            }
+                        }
+                    },
+
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/mover/trip/{id}": {
+            "put": {
+                "tags": ["Mover / Trip"],
+                "description": "update  to db",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": { "type": "string" },
+                                    "mover_id": { "type": "string" }
+                                }
+                            },
+                            "example": {
+                                "name": "first mover in 22024222 2",
+                                "mover_id": "671f84ee3a89d1f8ef5f0ea0"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Mover / Trip"],
+                "description": "delete  to db",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "$ref": "#/components/parameters/IdParameter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        },
+        "/mover/trip/change-state": {
+            "patch": {
+                "tags": ["Mover / Trip"],
+                "description": "change state of trip  to db",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/AcceptLanguage"
+                    },
+                    {
+                        "name": "trip_id",
+                        "in": "query",
+                        "required": true,
+                        "description": "A unique identifier for the resource",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    },
+                    {
+                        "name": "mover_id",
+                        "in": "query",
+                        "required": true,
+                        "description": "A unique identifier for the resource",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F]{24}$"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "required": true,
+                        "description": "The state of the trip.",
+                        "schema": {
+                            "type": "string",
+                            "enum": ["done", "loading", "on_mission", "resting"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/SeccessServerResponse"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "accept-language": {
+                "type": "string"
+            }
+        },
+        "schemas": {
+            "login": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "string",
+                        "example": "admin@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "Test@1234"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "The operation was failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "result": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "invalid signature"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "error": {
+                                            "type": "integer",
+                                            "example": 401
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "InternalServerError": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "boolean",
+                                    "example": false
+                                },
+                                "result": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Internal Server Error"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "error": {
+                                            "type": "integer",
+                                            "example": 500
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SeccessServerResponse": {
+                "description": "The operation was successful",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "success": {
+                                    "type": "boolean",
+                                    "example": true
+                                },
+                                "result": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The operation was successful"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "error": {
+                                            "type": "integer",
+                                            "example": null
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "AcceptLanguage": {
+                "name": "Accept-Language",
+                "in": "header",
+                "description": "Language preference (default: EN)",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "default": "EN"
+                }
+            },
+            "IdParameter": {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "description": "A unique identifier for the resource",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[0-9a-fA-F]{24}$"
+                }
+            },
+            "UserIdQuery": {
+                "name": "user_id",
+                "in": "query",
+                "required": true,
+                "description": "A unique identifier for the resource",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[0-9a-fA-F]{24}$"
+                }
+            },
+            "MoverIdQuery": {
+                "name": "mover_id",
+                "in": "query",
+                "required": true,
+                "description": "A unique identifier for the resource",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[0-9a-fA-F]{24}$"
+                }
+            }
+        }
+    },
+
+    "security": [
+        {
+            "bearerAuth": [],
+            "accept-language": []
+        }
+    ],
+    "Accept-Language": ""
+}
