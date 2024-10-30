@@ -108,15 +108,14 @@ This project is a robust backend application built to handle a variety of transp
         ```
     -   The generated documentation will be located in the `docs` folder.
 
-        _Note: This is also non-functional due to time constraints, but I have the setup_
+    -   _Note: This is also non-functional due to time constraints, but I have the setup_
 
 -   **Swagger:**
 
     -   Generate Swagger documentation using:
+        [http://localhost:4001/api-docs](http://localhost:4001/api-docs)
 
-    [http://localhost:4001/api-docs](http://localhost:4001/api-docs)
-
-    -   Note: ensure you NODE_ENV is developer mode because in the production mode that is not allowed
+    -   _Note: ensure you NODE_ENV is developer mode because in the production mode that is not allowed_
 
 ### Postman Collection
 
