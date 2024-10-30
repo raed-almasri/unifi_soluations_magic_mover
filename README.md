@@ -56,7 +56,7 @@ This project is a robust backend application built to handle a variety of transp
 
 1. **Clone the repository:**
 
-    bash git clone cd magic-transporters `git clone
+    bash git clone cd magic-transporters `git clone https://github.com/raed-almasri/unifi_soluations_magic_mover.git`
 
 2. **Install Dependencies:**
 
@@ -84,9 +84,9 @@ This project is a robust backend application built to handle a variety of transp
 ### Running the Application
 
 1. **Start the development server:**
-    ```
-    bash npm run start:dev
-    ```
+
+    bash `npm run start:dev`
+
     The application will typically be accessible at `http://localhost:4001` (or the port specified in your `.env` file).
 
 ### Testing
@@ -107,13 +107,14 @@ This project is a robust backend application built to handle a variety of transp
         npm run jsdoc
         ```
     -   The generated documentation will be located in the `docs` folder.
+
         _Note: This is also non-functional due to time constraints, but I have the setup_
 
 -   **Swagger:**
 
     -   Generate Swagger documentation using:
 
-        `http://localhost:4001/api-docs`
+    [http://localhost:4001/api-docs](http://localhost:4001/api-docs)
 
     -   Note: ensure you NODE_ENV is developer mode because in the production mode that is not allowed
 
@@ -134,6 +135,4 @@ We welcome contributions from the community!
 
 This project is licensed under the MIT License.
 
-## Eng
-
-**Raed Al Masri**
+## Eng Raed Al Masri
