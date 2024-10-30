@@ -59,11 +59,9 @@ This project is a robust backend application built to handle a variety of transp
     bash git clone cd magic-transporters `git clone https://github.com/raed-almasri/unifi_soluations_magic_mover.git`
 
 2.  **Install Dependencies:**
-
-        ```bash
-        npm install
-        ```
-
+    `bash
+    npm install
+    `
 3.  **Environment Configuration:**
 
     -   Create a `.env` file in the root of your project directory.
@@ -86,11 +84,9 @@ This project is a robust backend application built to handle a variety of transp
 ### Running the Application
 
 1.  **Start the development server:**
-
-        ```bash
-        npm run start:dev
-        ```
-
+    `bash
+    npm run start:dev
+    `
     The application will typically be accessible at `http://localhost:4001` (or the port specified in your `.env` file).
 
 ### Testing
